@@ -60,39 +60,6 @@ const ExportPrivateKeyModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const exportAccountAndGetPrivateKey = async (passwordInput, address) => {
-    try {
-      const privateKeyRetrieved = await exportAccount(passwordInput, address);
-      trackEvent(
-        {
-          category: MetaMetricsEventCategory.Keys,
-          event: MetaMetricsEventName.KeyExportRevealed,
-          properties: {
-            key_type: MetaMetricsEventKeyType.Pkey,
-          },
-        },
-        {},
-      );
-      setPrivateKey(privateKeyRetrieved);
-      setShowWarning(false);
-      setShowHoldToReveal(true);
-    } catch (e) {
-      trackEvent(
-        {
-          category: MetaMetricsEventCategory.Keys,
-          event: MetaMetricsEventName.KeyExportFailed,
-          properties: {
-            key_type: MetaMetricsEventKeyType.Pkey,
-            reason: 'incorrect_password',
-          },
-        },
-        {},
-      );
-
-      log.error(e);
-    }
-  };
-
   const { name, address } = selectedIdentity;
 
   if (showHoldToReveal) {
@@ -142,18 +109,6 @@ const ExportPrivateKeyModal = ({
         width={BLOCK_SIZES.FULL}
         margin={[5, 0, 3, 0]}
       />
-      <Text
-        variant={TextVariant.bodyLgMedium}
-        margin={[4, 0, 4, 0]}
-        fontWeight={FONT_WEIGHT.NORMAL}
-      >
-        {t('showPrivateKeys')}
-      </Text>
-      {privateKey ? (
-        <PrivateKeyDisplay privateKey={privateKey} />
-      ) : (
-        <PasswordInput setPassword={setPassword} />
-      )}
       {showWarning && (
         <Text color={Color.errorDefault} variant={TextVariant.bodySm}>
           {warning}
@@ -168,67 +123,6 @@ const ExportPrivateKeyModal = ({
       >
         {t('privateKeyWarning')}
       </BannerAlert>
-      <Box
-        display={DISPLAY.FLEX}
-        flexDirection={FLEX_DIRECTION.ROW}
-        width={BLOCK_SIZES.FULL}
-        justifyContent={JustifyContent.spaceBetween}
-        marginTop={3}
-        padding={[5, 0, 5, 0]}
-      >
-        {!privateKey && (
-          <Button
-            type={BUTTON_VARIANT.SECONDARY}
-            size={BUTTON_SIZES.LG}
-            width={BLOCK_SIZES.HALF}
-            marginRight={4}
-            onClick={() => {
-              trackEvent({
-                category: MetaMetricsEventCategory.Keys,
-                event: MetaMetricsEventName.KeyExportCanceled,
-                properties: {
-                  key_type: MetaMetricsEventKeyType.Pkey,
-                },
-              });
-              hideModal();
-            }}
-          >
-            {t('cancel')}
-          </Button>
-        )}
-        {privateKey ? (
-          <Button
-            type={BUTTON_VARIANT.PRIMARY}
-            size={BUTTON_SIZES.LG}
-            width={BLOCK_SIZES.FULL}
-            onClick={() => {
-              hideModal();
-            }}
-          >
-            {t('done')}
-          </Button>
-        ) : (
-          <Button
-            type={BUTTON_VARIANT.PRIMARY}
-            size={BUTTON_SIZES.LG}
-            width={BLOCK_SIZES.HALF}
-            onClick={() => {
-              trackEvent({
-                category: MetaMetricsEventCategory.Keys,
-                event: MetaMetricsEventName.KeyExportRequested,
-                properties: {
-                  key_type: MetaMetricsEventKeyType.Pkey,
-                },
-              });
-
-              exportAccountAndGetPrivateKey(password, address);
-            }}
-            disabled={!password}
-          >
-            {t('confirm')}
-          </Button>
-        )}
-      </Box>
     </AccountModalContainer>
   );
 };

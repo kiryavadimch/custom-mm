@@ -117,56 +117,6 @@ export default class SecurityTab extends PureComponent {
 
   hideSrpQuizModal = () => this.setState({ srpQuizModalVisible: false });
 
-  renderSeedWords() {
-    const { t } = this.context;
-
-    return (
-      <>
-        <div
-          ref={this.settingsRefs[0]}
-          className="settings-page__security-tab-sub-header"
-        >
-          {t('secretRecoveryPhrase')}
-        </div>
-        <div className="settings-page__content-padded">
-          <Button
-            data-testid="reveal-seed-words"
-            type="danger"
-            size={BUTTON_SIZES.LG}
-            onClick={(event) => {
-              event.preventDefault();
-              this.context.trackEvent({
-                category: MetaMetricsEventCategory.Settings,
-                event: MetaMetricsEventName.KeyExportSelected,
-                properties: {
-                  key_type: MetaMetricsEventKeyType.Srp,
-                  location: 'Settings',
-                },
-              });
-              this.context.trackEvent({
-                category: MetaMetricsEventCategory.Settings,
-                event: MetaMetricsEventName.SrpRevealClicked,
-                properties: {
-                  key_type: MetaMetricsEventKeyType.Srp,
-                  location: 'Settings',
-                },
-              });
-              this.setState({ srpQuizModalVisible: true });
-            }}
-          >
-            {t('revealSeedWords')}
-          </Button>
-          {this.state.srpQuizModalVisible && (
-            <SRPQuiz
-              isOpen={this.state.srpQuizModalVisible}
-              onClose={this.hideSrpQuizModal}
-            />
-          )}
-        </div>
-      </>
-    );
-  }
-
   renderIncomingTransactionsOptIn() {
     const { t } = this.context;
     const { showIncomingTransactions, setShowIncomingTransactionsFeatureFlag } =
@@ -762,10 +712,6 @@ export default class SecurityTab extends PureComponent {
     return (
       <div className="settings-page__body">
         {warning && <div className="settings-tab__error">{warning}</div>}
-        <span className="settings-page__security-tab-sub-header__bold">
-          {this.context.t('security')}
-        </span>
-        {this.renderSeedWords()}
         <span className="settings-page__security-tab-sub-header__bold">
           {this.context.t('privacy')}
         </span>

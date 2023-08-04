@@ -71,26 +71,6 @@ export const AccountDetailsDisplay = ({
         accounts={accounts}
       />
       <QrView Qr={{ data: address }} />
-      {exportPrivateKeyFeatureEnabled ? (
-        <ButtonSecondary
-          block
-          size={BUTTON_SECONDARY_SIZES.LG}
-          variant={TextVariant.bodyMd}
-          onClick={() => {
-            trackEvent({
-              category: MetaMetricsEventCategory.Accounts,
-              event: MetaMetricsEventName.KeyExportSelected,
-              properties: {
-                key_type: MetaMetricsEventKeyType.Pkey,
-                location: 'Account Details Modal',
-              },
-            });
-            onExportClick();
-          }}
-        >
-          {t('showPrivateKey')}
-        </ButtonSecondary>
-      ) : null}
     </Box>
   );
 };

@@ -92,33 +92,6 @@ export default function ConfirmRecoveryPhrase({ secretRecoveryPhrase = '' }) {
           {t('seedPhraseEnterMissingWords')}
         </Typography>
       </Box>
-      <RecoveryPhraseChips
-        secretRecoveryPhrase={splitSecretRecoveryPhrase}
-        confirmPhase
-        setInputValue={handleSetPhraseElements}
-        inputValue={phraseElements}
-        indicesToCheck={indicesToCheck}
-      />
-      <div className="recovery-phrase__footer__confirm">
-        <Button
-          data-testid="recovery-phrase-confirm"
-          type="primary"
-          large
-          className="recovery-phrase__footer__confirm--button"
-          onClick={async () => {
-            await dispatch(setSeedPhraseBackedUp(true));
-            trackEvent({
-              category: MetaMetricsEventCategory.Onboarding,
-              event:
-                MetaMetricsEventName.OnboardingWalletSecurityPhraseConfirmed,
-            });
-            history.push(ONBOARDING_COMPLETION_ROUTE);
-          }}
-          disabled={!matching}
-        >
-          {t('confirm')}
-        </Button>
-      </div>
     </div>
   );
 }
